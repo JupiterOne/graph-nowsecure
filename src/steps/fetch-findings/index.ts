@@ -35,7 +35,7 @@ const step: IntegrationStep = {
     );
     await jobState.addRelationships(accountAppRelationships);
 
-    const serviceEntity = getServiceEntity(instance.id);
+    const serviceEntity = getServiceEntity(instance);
     const serviceAppRelationships = appEntities.map((appEntity) =>
       createIntegrationRelationship({
         from: serviceEntity,
