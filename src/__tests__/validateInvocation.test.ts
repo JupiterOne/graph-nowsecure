@@ -12,7 +12,7 @@ test('rejects if apiKey is not present', async () => {
   fetchMock.mockResponse('{}');
 
   const context = createMockExecutionContext();
-  context.instance.config['apiKey'] = undefined;
+  context.instance.config['apiToken'] = undefined;
 
   await expect(validateInvocation(context)).rejects.toThrow(
     /Provider authentication failed/,
@@ -42,8 +42,7 @@ test('performs sample api call to ensure api can be hit', async () => {
 
   const context = createMockExecutionContext();
   context.instance.config = {
-    getLastReport: false,
-    apiKey: 'test',
+    apiToken: 'test',
   };
 
   await expect(validateInvocation(context)).resolves.toBe(undefined);
