@@ -14,7 +14,7 @@ export default async function validateInvocation(
   } catch (err) {
     throw new IntegrationProviderAuthenticationError({
       cause: err,
-      endpoint: 'api.nowsecure.com/rest/v2/',
+      endpoint: 'lab-api.nowsecure.com/',
       status: 401,
       statusText: err.toString(),
     });
