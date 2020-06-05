@@ -2,7 +2,7 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import {
@@ -11,6 +11,7 @@ import {
   getServiceEntity,
   getAccountEntity,
 } from '../../converter';
+import { IntegrationConfig } from '../../types';
 
 const step: IntegrationStep = {
   id: 'fetch-findings',
@@ -19,7 +20,7 @@ const step: IntegrationStep = {
   async executionHandler({
     instance,
     jobState,
-  }: IntegrationStepExecutionContext) {
+  }: IntegrationStepExecutionContext<IntegrationConfig>) {
     const client = createServicesClient(instance);
     const apps = await client.listApplications();
     const appEntities = apps.map(convertApp);

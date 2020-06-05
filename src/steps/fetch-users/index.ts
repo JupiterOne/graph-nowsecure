@@ -2,10 +2,11 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import { convertUser, getAccountEntity } from '../../converter';
+import { IntegrationConfig } from '../../types';
 
 const step: IntegrationStep = {
   id: 'fetch-users',
@@ -14,7 +15,7 @@ const step: IntegrationStep = {
   async executionHandler({
     instance,
     jobState,
-  }: IntegrationStepExecutionContext) {
+  }: IntegrationStepExecutionContext<IntegrationConfig>) {
     const client = createServicesClient(instance);
     const accountEntity = getAccountEntity(instance);
 

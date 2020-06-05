@@ -4,10 +4,7 @@ import nodeFetch, { Request } from 'node-fetch';
 
 import { retryableRequestError, fatalRequestError } from './error';
 import { URLSearchParams } from 'url';
-
-export interface ServicesClientInput {
-  apiToken: string;
-}
+import { IntegrationConfig } from '../types';
 
 interface QueryParam {
   [param: string]: string | string[];
@@ -23,7 +20,7 @@ export class ServicesClient {
   readonly baseUrl: string;
   readonly authHeader: { [key: string]: string };
 
-  constructor(config: ServicesClientInput) {
+  constructor(config: IntegrationConfig) {
     this.baseUrl = BASE_URL;
     this.authHeader = {
       Authorization: `Bearer ${config.apiToken}`,
