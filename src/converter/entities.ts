@@ -75,7 +75,7 @@ export const convertFinding = (
     entityData: {
       source: data,
       assign: {
-        _key: `nowsecure-finding:${data.unique_vulnerability_id}`,
+        _key: `nowsecure-finding:${app}:${data.unique_vulnerability_id}:${data.finding_id}`,
         _type: 'nowsecure_finding',
         _class: ['Finding'],
         vulnId: data.unique_vulnerability_id,

@@ -51,9 +51,18 @@ const step: IntegrationStep = {
         const findingEntities = findings.map((f) =>
           convertFinding(f, appEntity.ref),
         );
-        await jobState.addEntities(findingEntities);
 
-        const relationships = findingEntities.map((findingEntity) =>
+        const seen = new Set<string>();
+        const findingEntitiesDeduped = [];
+        for (const entity of findingEntities) {
+          if (!seen.has(entity._key)) {
+            seen.add(entity._key);
+            findingEntitiesDeduped.push(entity);
+          }
+        }
+        await jobState.addEntities(findingEntitiesDeduped);
+
+        const relationships = findingEntitiesDeduped.map((findingEntity) =>
           createIntegrationRelationship({
             from: appEntity,
             to: findingEntity,
