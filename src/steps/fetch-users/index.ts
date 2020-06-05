@@ -11,7 +11,7 @@ import { IntegrationConfig } from '../../types';
 const step: IntegrationStep = {
   id: 'fetch-users',
   name: 'Fetch NowSecure account users',
-  types: ['nowsecure_account', 'nowsecure_user'],
+  types: ['nowsecure_account', 'nowsecure_user', 'nowsecure_account_has_user'],
   async executionHandler({
     instance,
     jobState,
