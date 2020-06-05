@@ -2,7 +2,7 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import {
@@ -11,15 +11,23 @@ import {
   getServiceEntity,
   getAccountEntity,
 } from '../../converter';
+import { IntegrationConfig } from '../../types';
 
 const step: IntegrationStep = {
   id: 'fetch-findings',
   name: `Fetch NowSecure apps and vulnerability findings`,
-  types: ['nowsecure_service', 'nowsecure_finding', 'mobile_app'],
+  types: [
+    'mobile_app',
+    'nowsecure_service',
+    'nowsecure_finding',
+    'nowsecure_account_has_mobile_app',
+    'nowsecure_service_tests_mobile_app',
+    'mobile_app_has_nowsecure_finding',
+  ],
   async executionHandler({
     instance,
     jobState,
-  }: IntegrationStepExecutionContext) {
+  }: IntegrationStepExecutionContext<IntegrationConfig>) {
     const client = createServicesClient(instance);
     const apps = await client.listApplications();
     const appEntities = apps.map(convertApp);

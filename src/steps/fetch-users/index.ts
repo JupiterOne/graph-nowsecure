@@ -2,19 +2,20 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   createIntegrationRelationship,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import { convertUser, getAccountEntity } from '../../converter';
+import { IntegrationConfig } from '../../types';
 
 const step: IntegrationStep = {
   id: 'fetch-users',
   name: 'Fetch NowSecure account users',
-  types: ['nowsecure_account', 'nowsecure_user'],
+  types: ['nowsecure_account', 'nowsecure_user', 'nowsecure_account_has_user'],
   async executionHandler({
     instance,
     jobState,
-  }: IntegrationStepExecutionContext) {
+  }: IntegrationStepExecutionContext<IntegrationConfig>) {
     const client = createServicesClient(instance);
     const accountEntity = getAccountEntity(instance);
 

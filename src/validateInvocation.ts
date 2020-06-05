@@ -1,12 +1,13 @@
 import {
   IntegrationExecutionContext,
   IntegrationProviderAuthenticationError,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from './collector';
+import { IntegrationConfig } from './types';
 
 export default async function validateInvocation(
-  context: IntegrationExecutionContext,
+  context: IntegrationExecutionContext<IntegrationConfig>,
 ): Promise<void> {
   try {
     const client = createServicesClient(context.instance);

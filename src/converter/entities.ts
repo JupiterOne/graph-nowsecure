@@ -4,7 +4,7 @@ import {
   getTime,
   convertProperties,
   Entity,
-} from '@jupiterone/integration-sdk';
+} from '@jupiterone/integration-sdk-core';
 import { getCVSS3Severity } from './utils';
 
 export const getAccountEntity = (instance: any): Entity => ({
