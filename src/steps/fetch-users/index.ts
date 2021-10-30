@@ -1,17 +1,32 @@
 import {
   IntegrationStep,
   IntegrationStepExecutionContext,
-  createIntegrationRelationship,
+  createDirectRelationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
 import { convertUser, getAccountEntity } from '../../converter';
 import { IntegrationConfig } from '../../types';
 
-const step: IntegrationStep = {
+const step: IntegrationStep<IntegrationConfig> = {
   id: 'fetch-users',
   name: 'Fetch NowSecure account users',
-  types: ['nowsecure_account', 'nowsecure_user', 'nowsecure_account_has_user'],
+  entities: [
+    {
+      _class: 'User',
+      _type: 'nowsecure_user',
+      resourceName: 'User',
+    },
+  ],
+  relationships: [
+    {
+      _type: 'nowsecure_account_has_user',
+      _class: RelationshipClass.HAS,
+      sourceType: 'nowsecure_account',
+      targetType: 'nowsecure_user',
+    },
+  ],
   async executionHandler({
     instance,
     jobState,
@@ -24,10 +39,10 @@ const step: IntegrationStep = {
     await jobState.addEntities(userEntities);
 
     const relationships = userEntities.map((userEntity) =>
-      createIntegrationRelationship({
+      createDirectRelationship({
         from: accountEntity,
         to: userEntity,
-        _class: 'HAS',
+        _class: RelationshipClass.HAS,
       }),
     );
     await jobState.addRelationships(relationships);
