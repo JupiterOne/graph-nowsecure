@@ -8,12 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
-## 0.2.0 - 2021-10-30
+## 2.0.0 - 2021-10-30
 
 ### Changed
 
 - Upgraded `@jupiterone/integration-sdk-*` packages
 - Upgraded project to latest patterns
+- Changed `nowsecure_service` **TESTS** `mobile_app` relationship to
+  `nowsecure_service` **SCANS** `mobile_app`
 
 ## 0.1.0 - 2020-05-20
 
