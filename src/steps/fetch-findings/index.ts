@@ -38,9 +38,8 @@ const step: IntegrationStep<IntegrationConfig> = {
       targetType: 'mobile_app',
     },
     {
-      _type: 'nowsecure_service_tests_mobile_app',
-      _class: 'TESTS' as any,
-      // _class: RelationshipClass.TESTS,
+      _type: 'nowsecure_service_scans_mobile_app',
+      _class: RelationshipClass.SCANS,
       sourceType: 'nowsecure_service',
       targetType: 'mobile_app',
     },
@@ -75,8 +74,7 @@ const step: IntegrationStep<IntegrationConfig> = {
       createDirectRelationship({
         from: serviceEntity,
         to: appEntity,
-        _class: 'TESTS' as any,
-        // _class: RelationshipClass.TESTS,
+        _class: RelationshipClass.SCANS,
       }),
     );
     await jobState.addRelationships(serviceAppRelationships);

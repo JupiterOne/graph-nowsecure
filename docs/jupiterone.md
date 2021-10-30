@@ -65,31 +65,6 @@ requires Enterprise Plan from NowSecure).
 4. Click the **trash can** icon.
 5. Click the **Remove** button to delete the integration.
 
-## Data Model
-
-JupiterOne vulnerability management and scanner integration is built on this
-high level data model:
-
-```text
-Vendor   - HOSTS    ->       Account
-Account  - PROVIDES ->       Service (*)
-Service  - SCANS or TESTS -> <Entity> (*)
-<Entity> - HAS      ->       Finding
-```
-
-> (\*) Examples:
->
-> - `Service` (e.g. SAST, DAST, IAST, MAST, PenTest, etc.)
-> - `<Entity>` (e.g. Application or Host or Device)
-
-Optionally, the following is added when each scan/assessment/report is also
-tracked by the integration:
-
-```text
-Service    - PERFORMS   -> Assessment
-Assessment - IDENTIFIED -> Finding
-```
-
 <!-- {J1_DOCUMENTATION_MARKER_START} -->
 <!--
 ********************************************************************************
@@ -125,7 +100,7 @@ The following relationships are created:
 | `nowsecure_account`   | **HAS**               | `mobile_app`          |
 | `nowsecure_account`   | **HAS**               | `nowsecure_user`      |
 | `nowsecure_account`   | **PROVIDES**          | `nowsecure_service`   |
-| `nowsecure_service`   | **TESTS**             | `mobile_app`          |
+| `nowsecure_service`   | **SCANS**             | `mobile_app`          |
 
 <!--
 ********************************************************************************
