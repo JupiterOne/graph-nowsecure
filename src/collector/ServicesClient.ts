@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { retry } from '@lifeomic/attempt';
 import nodeFetch, { Request } from 'node-fetch';
 
@@ -66,7 +65,7 @@ export class ServicesClient {
          * We are working with a json api, so just return the parsed data.
          */
         if (response.ok) {
-          return response.json() as T;
+          return (await response.json()) as T;
         }
 
         if (isRetryableRequest(response)) {

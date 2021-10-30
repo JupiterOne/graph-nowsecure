@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   createIntegrationEntity,
-  getTime,
   convertProperties,
   Entity,
+  parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 import { getCVSS3Severity } from './utils';
 
@@ -27,9 +26,7 @@ export const getServiceEntity = (instance: any): Entity => ({
   function: 'MAST',
 });
 
-export const convertUser = (
-  data: any,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertUser = (data: any): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -41,16 +38,14 @@ export const convertUser = (
         id: `nowsecure-user:${data.id}`,
         displayName: data.name,
         username: data.email,
-        createdOn: getTime(data.created_at),
-        updatedOn: getTime(data.updated_at),
+        createdOn: parseTimePropertyValue(data.created_at),
+        updatedOn: parseTimePropertyValue(data.updated_at),
         roles: data.roles?.map((r) => r.label),
       },
     },
   });
 
-export const convertApp = (
-  data: any,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertApp = (data: any): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -61,16 +56,13 @@ export const convertApp = (
         _class: ['Application'],
         name: data.title,
         displayName: data.title,
-        createdOn: getTime(data.created),
+        createdOn: parseTimePropertyValue(data.created),
         webLink: `https://lab.nowsecure.com/app/${data.ref}`,
       },
     },
   });
 
-export const convertFinding = (
-  data: any,
-  app: string,
-): ReturnType<typeof createIntegrationEntity> =>
+export const convertFinding = (data: any, app: string): Entity =>
   createIntegrationEntity({
     entityData: {
       source: data,
@@ -82,10 +74,10 @@ export const convertFinding = (
         name: data.finding_id,
         displayName: data.finding_id,
         category: 'mobile',
-        createdOn: getTime(data.opened_at),
-        lastSeenOn: getTime(data.last_seen_at),
-        openedOn: getTime(data.opened_at),
-        closedOn: getTime(data.closed_on),
+        createdOn: parseTimePropertyValue(data.opened_at),
+        lastSeenOn: parseTimePropertyValue(data.last_seen_at),
+        openedOn: parseTimePropertyValue(data.opened_at),
+        closedOn: parseTimePropertyValue(data.closed_on),
         score: data.last_seen_cvss,
         numericSeverity: data.last_seen_cvss,
         severity: getCVSS3Severity(data.last_seen_cvss),

@@ -1,7 +1,9 @@
 import {
   IntegrationStep,
   IntegrationStepExecutionContext,
-  createIntegrationRelationship,
+  createDirectRelationship,
+  RelationshipClass,
+  Entity,
 } from '@jupiterone/integration-sdk-core';
 
 import { createServicesClient } from '../../collector';
@@ -13,16 +15,41 @@ import {
 } from '../../converter';
 import { IntegrationConfig } from '../../types';
 
-const step: IntegrationStep = {
+const step: IntegrationStep<IntegrationConfig> = {
   id: 'fetch-findings',
   name: `Fetch NowSecure apps and vulnerability findings`,
-  types: [
-    'mobile_app',
-    'nowsecure_service',
-    'nowsecure_finding',
-    'nowsecure_account_has_mobile_app',
-    'nowsecure_service_tests_mobile_app',
-    'mobile_app_has_nowsecure_finding',
+  entities: [
+    {
+      _class: 'Application',
+      _type: 'mobile_app',
+      resourceName: 'Mobile Applications',
+    },
+    {
+      _class: 'Finding',
+      _type: 'nowsecure_finding',
+      resourceName: 'Finding',
+    },
+  ],
+  relationships: [
+    {
+      _type: 'nowsecure_account_has_mobile_app',
+      _class: RelationshipClass.HAS,
+      sourceType: 'nowsecure_account',
+      targetType: 'mobile_app',
+    },
+    {
+      _type: 'nowsecure_service_tests_mobile_app',
+      _class: 'TESTS' as any,
+      // _class: RelationshipClass.TESTS,
+      sourceType: 'nowsecure_service',
+      targetType: 'mobile_app',
+    },
+    {
+      _type: 'mobile_app_has_nowsecure_finding',
+      _class: RelationshipClass.HAS,
+      sourceType: 'mobile_app',
+      targetType: 'nowsecure_finding',
+    },
   ],
   async executionHandler({
     instance,
@@ -35,33 +62,34 @@ const step: IntegrationStep = {
 
     const accountEntity = getAccountEntity(instance);
     const accountAppRelationships = appEntities.map((appEntity) =>
-      createIntegrationRelationship({
+      createDirectRelationship({
         from: accountEntity,
         to: appEntity,
-        _class: 'HAS',
+        _class: RelationshipClass.HAS,
       }),
     );
     await jobState.addRelationships(accountAppRelationships);
 
     const serviceEntity = getServiceEntity(instance);
     const serviceAppRelationships = appEntities.map((appEntity) =>
-      createIntegrationRelationship({
+      createDirectRelationship({
         from: serviceEntity,
         to: appEntity,
-        _class: 'TESTS',
+        _class: 'TESTS' as any,
+        // _class: RelationshipClass.TESTS,
       }),
     );
     await jobState.addRelationships(serviceAppRelationships);
 
     for (const appEntity of appEntities) {
       if (appEntity.ref) {
-        const findings = await client.listAppFindings(appEntity.ref);
+        const findings = await client.listAppFindings(appEntity.ref as string);
         const findingEntities = findings.map((f) =>
-          convertFinding(f, appEntity.ref),
+          convertFinding(f, appEntity.ref as string),
         );
 
         const seen = new Set<string>();
-        const findingEntitiesDeduped = [];
+        const findingEntitiesDeduped: Entity[] = [];
         for (const entity of findingEntities) {
           if (!seen.has(entity._key)) {
             seen.add(entity._key);
@@ -71,10 +99,10 @@ const step: IntegrationStep = {
         await jobState.addEntities(findingEntitiesDeduped);
 
         const relationships = findingEntitiesDeduped.map((findingEntity) =>
-          createIntegrationRelationship({
+          createDirectRelationship({
             from: appEntity,
             to: findingEntity,
-            _class: 'HAS',
+            _class: RelationshipClass.HAS,
           }),
         );
         await jobState.addRelationships(relationships);
