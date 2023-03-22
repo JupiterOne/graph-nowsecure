@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.1 - 2023-03-22
+
 ### Changed
 
 - Deduplicate `mobile_app` entities
