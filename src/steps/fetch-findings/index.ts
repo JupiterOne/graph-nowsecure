@@ -56,8 +56,15 @@ const step: IntegrationStep<IntegrationConfig> = {
   }: IntegrationStepExecutionContext<IntegrationConfig>) {
     const client = createServicesClient(instance);
     const apps = await client.listApplications();
-    const appEntities = apps.map(convertApp);
-    await jobState.addEntities(appEntities);
+
+    const appEntities: Entity[] = [];
+    for (const app of apps) {
+      const appEntity = convertApp(app);
+      if (!jobState.hasKey(appEntity._key)) {
+        await jobState.addEntity(appEntity);
+        appEntities.push(appEntity);
+      }
+    }
 
     const accountEntity = getAccountEntity(instance);
     const accountAppRelationships = appEntities.map((appEntity) =>
